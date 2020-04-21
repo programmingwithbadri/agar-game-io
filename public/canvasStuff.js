@@ -5,8 +5,13 @@ function init() {
 // Canvas Drawing
 player.locX = Math.floor(500 * Math.random() + 10);
 player.locY = Math.floor(500 * Math.random() + 10);
+
+// Context was set as 2D in the uiStuff.js
 function draw() {
-  // Context was set as 2D in the uiStuff.js
+  // Clear the canvas whenever the draw method is called
+  // So that we wont see the player circle is dragging across the window
+  // when the mouse is moved
+  context.clearRect(0, 0, canvas.width, canvas.height);
   context.beginPath();
   context.fillStyle = "rgb(255,0,0)";
 
@@ -15,7 +20,7 @@ function draw() {
   // Arg 3 - Radius of the circle
   // Arg 4 - Start of the Radian. For eg) 0 - 3 o clock position
   // Arg 5 - stop of radian. Here its 3
-  context.arc(player.locX , player.locY, 10, 0, Math.PI * 2);
+  context.arc(player.locX, player.locY, 10, 0, Math.PI * 2);
   context.fill();
 
   // Will add border around the circle
