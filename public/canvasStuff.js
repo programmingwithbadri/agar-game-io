@@ -12,6 +12,17 @@ function draw() {
   // So that we wont see the player circle is dragging across the window
   // when the mouse is moved
   context.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Reset the canvas translate
+  context.setTransform(1, 0, 0, 1, 0, 0);
+
+  // Move the canvas but set the focus to the player position
+  const camX = -player.locX + canvas.width / 2;
+  const camY = -player.locY + canvas.height / 2;
+
+  // Translate around us to move the canvas around
+  context.translate(camX, camY);
+
   context.beginPath();
   context.fillStyle = "rgb(255,0,0)";
 
