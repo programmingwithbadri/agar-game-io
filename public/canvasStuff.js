@@ -39,6 +39,14 @@ function draw() {
   context.strokeStyle = "rgb(0,255,0)";
   context.stroke();
 
+  // Load the orbs got from socket server
+  orbs.forEach((orb) => {
+    context.beginPath();
+    context.fillStyle = orb.color;
+    context.arc(orb.locX, orb.locY, orb.radius, 0, Math.PI * 2);
+    context.fill();
+  });
+
   // Recursively calls the draw method to update the canvas
   // based on x and y axis that will be provided by mouse move in the UI
   requestAnimationFrame(draw);
