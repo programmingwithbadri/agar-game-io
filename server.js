@@ -1,6 +1,9 @@
 const express = require("express");
+const socketIo = require("socket.io");
+
 const app = express();
 
 app.use(express.static(__dirname + "/public"));
+const expressServer = app.listen("9000");
 
-app.listen("9000", () => console.log("Server is listening"));
+const io = socketIo(expressServer);
