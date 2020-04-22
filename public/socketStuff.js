@@ -1,4 +1,17 @@
 let socket = io.connect("http://localhost:9000");
-socket.on("init", (data) => {
+
+// This method will be called once the user select start game
+function init() {
+  // Start drawing the canvas stuff
+  draw();
+
+  // Emit the init event from the client to the server
+  socket.emit("init", {
+    playerName: player.name,
+  });
+}
+
+// Listens to defaultOrbs event to show the orbs in the UI
+socket.on("defaultOrbs", (data) => {
   orbs = data.orbs;
 });

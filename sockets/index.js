@@ -10,25 +10,27 @@ let gameSettings = {
   defaultOrbs: 500,
   defaultSpeed: 6,
   defaultSize: 6,
-  defaultZoom: 1.5,  // If the player gets bigger, the screen has to zoom out
+  defaultZoom: 1.5, // If the player gets bigger, the screen has to zoom out
   worldWidth: 500,
-  worldHeight: 500
-}
+  worldHeight: 500,
+};
 
 initGame();
 
 io.on("connect", (socket) => {
-  // A player has connected
-  // Create the player config object
-  let playerConfig = new PlayerConfig(gameSettings);
+  socket.on("init", (data) => {
+    // A player has connected
+    // Create the player config object
+    let playerConfig = new PlayerConfig(gameSettings);
 
-  // Create the player data object
-  // Player data will be sent to all other players
-  let playerData = new PlayerData(null, gameSettings);
+    // Create the player data object
+    // Player data will be sent to all other players
+    let playerData = new PlayerData(data.playerName, gameSettings);
 
-  // Create Master player object to hold both
-  let player = new Player(socket.id, playerConfig, playerData)
-  socket.emit("init", { orbs });
+    // Create Master player object to hold both
+    let player = new Player(socket.id, playerConfig, playerData);
+    socket.emit("defaultOrbs", { orbs });
+  });
 });
 
 // Runs at the beginning of each game
