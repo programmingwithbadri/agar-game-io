@@ -1,8 +1,8 @@
 class Orb {
-  constructor() {
+  constructor(gameSettings) {
     this.color = this.getRandomColor();
-    this.locX = Math.floor(500 * Math.random());
-    this.locY = Math.floor(500 * Math.random());
+    this.locX = Math.floor(gameSettings.worldWidth * Math.random());
+    this.locY = Math.floor(gameSettings.worldHeight * Math.random());
     this.radius = 5;
   }
 
