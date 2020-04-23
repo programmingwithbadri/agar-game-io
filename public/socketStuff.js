@@ -18,18 +18,22 @@ socket.on("defaultOrbs", (data) => {
     socket.emit("tick", {
       xVector: player.xVector,
       yVector: player.yVector,
-    })
+    });
   }, 33);
 });
 
 // Listen to the tock event to show other players in the UI
 socket.on("tock", (data) => {
   players = data.players;
+});
+
+// Orb to be replaced in the screen
+socket.on("orbSwitch", (data) => {
+  orbs.splice(data.orbIndex, 1, data.newOrb);
+});
+
+// Listen to current player's location to focus
+socket.on("tickTock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
 });
-
-// Orb to be replaced in the screen 
-socket.on("orbSwitch", (data) => {
-  orbs.splice(data.orbIndex, 1, data.newOrb)
-})

@@ -22,6 +22,16 @@ let gameSettings = {
 
 initGame();
 
+// Send the message to every connected sockets 30 fps(33 ms)
+setInterval(() => {
+  if (players.length > 0) {
+    // Send the players info to everyone in the game room
+    io.to("game").emit("tock", {
+      players,
+    });
+  }
+}, 33);
+
 io.on("connect", (socket) => {
   let player = {};
   socket.on("init", (data) => {
@@ -40,9 +50,8 @@ io.on("connect", (socket) => {
 
     // Send the message to every connected sockets 30 fps(33 ms)
     setInterval(() => {
-      // Send the players info to everyone in the game room
-      io.to("game").emit("tock", {
-        players,
+      // Send the player current loc to the client to focus the player in UI
+      socket.emit("tickTock", {
         playerX: player.playerData.locX,
         playerY: player.playerData.locY,
       });
@@ -79,23 +88,36 @@ io.on("connect", (socket) => {
       player.playerData.locY -= speed * yV;
     }
 
+    // ORB collision
     let capturedOrb = checkForOrbCollisions(
       player.playerData,
       player.playerConfig,
       orbs,
       gameSettings
     );
-    capturedOrb.then((data) => {
-      // Success promise means player captured the orb
-      // Emit to all sockets the orb to replace because player captured the orb
-      const orbData = {
-        orbIndex: data,
-        newOrb: orbs[data]
-      }
-      io.emit('orbSwitch', orbData)
+    capturedOrb
+      .then((data) => {
+        // Success promise means player captured the orb
+        // Emit to all sockets the orb to replace because player captured the orb
+        const orbData = {
+          orbIndex: data,
+          newOrb: orbs[data],
+        };
+        io.emit("orbSwitch", orbData);
+      })
+      .catch(() => {
+        // No orbs captured
+      });
 
-    }).catch(() => {
-      // No orbs captured
+    // Player Collision
+    let playerDeath = checkForPlayerCollisions(
+      player.playerData,
+      player.playerConfig,
+      players,
+      player.playerId
+    );
+    playerDeath.then((data) => {}).catch(() => {
+
     });
   });
 });
