@@ -24,7 +24,7 @@ function draw() {
     // arg3 = radius
     // arg4 = where to start on the circle in radians, 0 = 3:00
     // arg5 = where to stop in radians
-    context.arc(p.locX, p.locY, 10, 0, Math.PI * 2);
+    context.arc(p.locX, p.locY, p.radius, 0, Math.PI * 2);
     // context.arc(200,200,10,0,Math.PI*2)
     context.fill();
     context.lineWidth = 3;

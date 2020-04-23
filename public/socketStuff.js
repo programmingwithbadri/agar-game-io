@@ -28,3 +28,8 @@ socket.on("tock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
 });
+
+// Orb to be replaced in the screen 
+socket.on("orbSwitch", (data) => {
+  orbs.splice(data.orbIndex, 1, data.newOrb)
+})

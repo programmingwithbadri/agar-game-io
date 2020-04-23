@@ -3,19 +3,21 @@ const Orb = require("./classes/Orb");
 const Player = require("./classes/Player");
 const PlayerConfig = require("./classes/PlayerConfig");
 const PlayerData = require("./classes/PlayerData");
-const checkForOrbCollisions = require("./checkCollisions").checkForOrbCollisions;
-const checkForPlayerCollisions = require("./checkCollisions").checkForPlayerCollisions;
+const checkForOrbCollisions = require("./checkCollisions")
+  .checkForOrbCollisions;
+const checkForPlayerCollisions = require("./checkCollisions")
+  .checkForPlayerCollisions;
 
 let orbs = [];
 let players = [];
 
 let gameSettings = {
-  defaultOrbs: 500,
+  defaultOrbs: 5000,
   defaultSpeed: 6,
   defaultSize: 6,
   defaultZoom: 1.5, // If the player gets bigger, the screen has to zoom out
-  worldWidth: 500,
-  worldHeight: 500,
+  worldWidth: 5000,
+  worldHeight: 5000,
 };
 
 initGame();
@@ -76,6 +78,25 @@ io.on("connect", (socket) => {
       player.playerData.locX += speed * xV;
       player.playerData.locY -= speed * yV;
     }
+
+    let capturedOrb = checkForOrbCollisions(
+      player.playerData,
+      player.playerConfig,
+      orbs,
+      gameSettings
+    );
+    capturedOrb.then((data) => {
+      // Success promise means player captured the orb
+      // Emit to all sockets the orb to replace because player captured the orb
+      const orbData = {
+        orbIndex: data,
+        newOrb: orbs[data]
+      }
+      io.emit('orbSwitch', orbData)
+
+    }).catch(() => {
+      // No orbs captured
+    });
   });
 });
 

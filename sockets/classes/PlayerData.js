@@ -7,6 +7,7 @@ class PlayerData {
     this.radius = gameSettings.defaultSize;
     this.color = this.getRandomColor();
     this.score = 0;
+    this.orbsAbsorbed = 0;
   }
 
   getRandomColor() {
