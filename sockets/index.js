@@ -12,12 +12,12 @@ let orbs = [];
 let players = [];
 
 let gameSettings = {
-  defaultOrbs: 5000,
+  defaultOrbs: 50,
   defaultSpeed: 6,
   defaultSize: 6,
   defaultZoom: 1.5, // If the player gets bigger, the screen has to zoom out
-  worldWidth: 5000,
-  worldHeight: 5000,
+  worldWidth: 500,
+  worldHeight: 500,
 };
 
 initGame();
@@ -103,6 +103,9 @@ io.on("connect", (socket) => {
           orbIndex: data,
           newOrb: orbs[data],
         };
+
+        // Every player should know the leaderBoard info
+        io.emit("updateLeaderboard", getLeaderBoard());
         io.emit("orbSwitch", orbData);
       })
       .catch(() => {
@@ -116,11 +119,31 @@ io.on("connect", (socket) => {
       players,
       player.playerId
     );
-    playerDeath.then((data) => {}).catch(() => {
-
-    });
+    playerDeath
+      .then((data) => {
+        // Every player should know the leaderBoard info
+        io, emit("updateLeaderboard", getLeaderBoard());
+      })
+      .catch(() => {});
   });
 });
+
+// Get LeaderBoard
+function getLeaderBoard() {
+  // Sort players based on their score
+  players.sort((a, b) => {
+    return b.score - a.score;
+  });
+
+  let leaderBoard = players.map((currentPlayer) => {
+    return {
+      name: currentPlayer.name,
+      score: currentPlayer.score,
+    };
+  });
+
+  return leaderBoard;
+}
 
 // Runs at the beginning of each game
 function initGame() {

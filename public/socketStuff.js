@@ -37,3 +37,13 @@ socket.on("tickTock", (data) => {
   player.locX = data.playerX;
   player.locY = data.playerY;
 });
+
+// Listen to the leaderBoard event
+socket.on("updateLeaderboard", (data) => {
+  document.querySelector(".leader-board").innerHTML = "";
+  data.forEach((currentPlayer) => {
+    document.querySelector(
+      ".leader-board"
+    ).innerHTML += `<li class="leaderboard-player">${currentPlayer.name} - ${currentPlayer.score}</li>`;
+  });
+});
