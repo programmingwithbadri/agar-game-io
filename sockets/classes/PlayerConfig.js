@@ -5,7 +5,7 @@ class PlayerConfig {
         this.xVector = 0;
         this.yVector = 0;
 
-        this.speed = gameSettings.defaultSize;
+        this.speed = gameSettings.defaultSpeed;
         this.zoom = gameSettings.defaultZoom
     }
 }

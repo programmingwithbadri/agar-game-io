@@ -1,7 +1,4 @@
 // Canvas Drawing
-player.locX = Math.floor(500 * Math.random() + 10);
-player.locY = Math.floor(500 * Math.random() + 10);
-
 // Context was set as 2D in the uiStuff.js
 function draw() {
   // Reset the canvas translate
@@ -19,17 +16,23 @@ function draw() {
   // Translate around us to move the canvas around
   context.translate(camX, camY);
 
-  context.beginPath();
-  context.fillStyle = "rgb(255,0,0)";
+  // draw all the players we got from the socket server
+  players.forEach((p) => {
+    context.beginPath();
+    context.fillStyle = p.color;
+    // arg1,2 = x,y of the center of the arc
+    // arg3 = radius
+    // arg4 = where to start on the circle in radians, 0 = 3:00
+    // arg5 = where to stop in radians
+    context.arc(p.locX, p.locY, 10, 0, Math.PI * 2);
+    // context.arc(200,200,10,0,Math.PI*2)
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = "rgb(0,255,0)";
+    context.stroke();
+  });
 
-  context.fill();
-
-  // Will add border around the circle
-  context.lineWidth = 3;
-  context.strokeStyle = "rgb(0,255,0)";
-  context.stroke();
-
-  // Load the orbs got from socket server
+  // Draw all the orbs got from socket server
   orbs.forEach((orb) => {
     context.beginPath();
     context.fillStyle = orb.color;
@@ -73,20 +76,6 @@ canvas.addEventListener("mousemove", (event) => {
     yVector = 1 - (angleDeg + 90) / 90;
   }
 
-  speed = 10;
-  xV = xVector;
-  yV = yVector;
-
-  // Move the player location by the mouse position
-  if (
-    (player.locX < 5 && player.xVector < 0) ||
-    (player.locX > 500 && xV > 0)
-  ) {
-    player.locY -= speed * yV;
-  } else if ((player.locY < 5 && yV > 0) || (player.locY > 500 && yV < 0)) {
-    player.locX += speed * xV;
-  } else {
-    player.locX += speed * xV;
-    player.locY -= speed * yV;
-  }
+  player.xVector = xVector;
+  player.yVector = yVector;
 });

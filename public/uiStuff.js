@@ -4,6 +4,7 @@ let windowWidth = $(window).width();
 
 let player = {};
 let orbs = [];
+let players = [];
 
 // Get the canvas to show in the window
 let canvas = document.querySelector("#the-canvas");

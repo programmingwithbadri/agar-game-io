@@ -14,4 +14,17 @@ function init() {
 // Listens to defaultOrbs event to show the orbs in the UI
 socket.on("defaultOrbs", (data) => {
   orbs = data.orbs;
+  setInterval(() => {
+    socket.emit("tick", {
+      xVector: player.xVector,
+      yVector: player.yVector,
+    })
+  }, 33);
+});
+
+// Listen to the tock event to show other players in the UI
+socket.on("tock", (data) => {
+  players = data.players;
+  player.locX = data.playerX;
+  player.locY = data.playerY;
 });
