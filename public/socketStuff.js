@@ -47,3 +47,16 @@ socket.on("updateLeaderboard", (data) => {
     ).innerHTML += `<li class="leaderboard-player">${currentPlayer.name} - ${currentPlayer.score}</li>`;
   });
 });
+
+// Broadcase the message that the player is killed
+socket.on("playerDeath", (data) => {
+  document.querySelector(
+    "#game-message"
+  ).innerHTML = `${data.died.name} absorbed by ${data.killedBy.name}`;
+  $("#game-message").css({
+    "background-color": "#00e6e6",
+    opacity: 1,
+  });
+  $("#game-message").show();
+  $("#game-message").fadeOut(5000);
+});

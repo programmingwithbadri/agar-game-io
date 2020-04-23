@@ -12,12 +12,12 @@ let orbs = [];
 let players = [];
 
 let gameSettings = {
-  defaultOrbs: 50,
+  defaultOrbs: 5000,
   defaultSpeed: 6,
   defaultSize: 6,
   defaultZoom: 1.5, // If the player gets bigger, the screen has to zoom out
-  worldWidth: 500,
-  worldHeight: 500,
+  worldWidth: 5000,
+  worldHeight: 5000,
 };
 
 initGame();
@@ -122,9 +122,26 @@ io.on("connect", (socket) => {
     playerDeath
       .then((data) => {
         // Every player should know the leaderBoard info
-        io, emit("updateLeaderboard", getLeaderBoard());
+        io.emit("updateLeaderboard", getLeaderBoard());
+
+        // a player was absorbed. Let everyone know!
+        io.emit("playerDeath", data);
       })
       .catch(() => {});
+  });
+
+  socket.on("disconnect", (data) => {
+    // find out who just left... which player in players
+    // make sure the player exists
+    if (player.playerData) {
+      players.forEach((currPlayer, i) => {
+        // if they match...
+        if (currPlayer.uid == player.playerData.uid) {
+          players.splice(i, 1);
+          io.emit("updateLeaderBoard", getLeaderBoard());
+        }
+      });
+    }
   });
 });
 

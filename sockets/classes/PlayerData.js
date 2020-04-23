@@ -1,6 +1,10 @@
+// Use uuid module to create a massive random string to id this player
+const { v4: uuidv4 } = require('uuid');
+
 // This data will be shared to all the players
 class PlayerData {
   constructor(playerName, gameSettings) {
+    this.uid = uuidv4(); // this will generate a crazy string to this player
     this.name = playerName;
     this.locX = Math.floor(gameSettings.worldWidth * Math.random() + 10);
     this.locY = Math.floor(gameSettings.worldHeight * Math.random() + 10);
